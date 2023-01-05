@@ -31,7 +31,7 @@ Magento Cloud Docker: `1.3.4`
 
 ## Install Magento Cloud Docker
 
-### Initlise the project
+### Initialise the project
 1. Create directory where you want to install Magento Cloud Docker.
 2. Change to the new project directory.
 3. Create composer project based on `magento/project-community-edition`.

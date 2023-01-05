@@ -141,7 +141,7 @@ Magento Cloud Docker: `1.3.4`
     docker-compose run --rm deploy magento-command setup:config:set --http-cache-hosts=varnish
     ```
     Answer `Y` to the following prompt:  
-    ```bash
+    ```
     Overwrite the existing configuration for http-cache-hosts?[Y/n]
     ```
 4. Clear the cache.

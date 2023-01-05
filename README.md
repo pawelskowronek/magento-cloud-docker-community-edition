@@ -1,7 +1,8 @@
 # Magento Cloud Docker - Community Edition
 
-## Version
-Magento 2.4.5-p1 Community Edition
+## Versions
+Magento: `2.4.5-p1 Community Edition`  
+Magento Cloud Docker: `1.3.4`
 
 ## Prerequisities:
 - Docker
@@ -160,5 +161,5 @@ docker-compose run --rm deploy magento-command sampledata:deploy
 
 docker-compose run --rm deploy magento-command setup:upgrade
 ```
-
+----
 Based on https://developer.adobe.com/commerce/cloud-tools/docker/deploy/developer-mode/

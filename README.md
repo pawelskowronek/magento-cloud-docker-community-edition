@@ -35,7 +35,7 @@ Magento Cloud Docker: `1.3.4`
 1. Create directory where you want to install Magento Cloud Docker.
 2. Change to the new project directory.
 3. Create composer project based on `magento/project-community-edition`.
-   Replace <public-key>:<private-key> with your [access credentials](https://experienceleague.adobe.com/docs/commerce-operations/installation-guide/prerequisites/authentication-keys.html)
+   Replace `<public-key>:<private-key>` with your [access credentials](https://experienceleague.adobe.com/docs/commerce-operations/installation-guide/prerequisites/authentication-keys.html)
     ```docker
     docker run --rm -v "$(pwd)":/m2 "magento/magento-cloud-docker-php:8.1-cli-1.3.4" composer create-project --repository-url=https://<public-key>:<private-key>@repo.magento.com/ magento/project-community-edition=2.4.5-p1 /m2
     ```

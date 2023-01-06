@@ -122,19 +122,21 @@ Magento Cloud Docker: `1.3.4`
     Status: Watching for changes
     ```
 ### Install Magento Cloud Docker
-1. Run initial `setup:upgrade`
-    ```docker
-    docker-compose run deploy bin/magento setup:upgrade
-    ```
-2. Deploy Adobe Commerce in the Docker container.
+1. Deploy Adobe Commerce in the Docker container.
     ```docker
     docker-compose run --rm deploy cloud-deploy
     ```
-3. Run post-deploy hooks.
+    If you come across an error during a deployment e.g. `Fatal error: Uncaught Exception: User Error:...` then you will need to run:
+    ```docker
+    docker-compose run deploy bin/magento setup:upgrade
+    ```
+    And then re-run the original `cloud-deploy` command.
+    This is due to this [issue](https://github.com/magento/magento-cloud-docker/issues/302) in Magento Cloud Docker.
+2. Run post-deploy hooks.
     ```docker
     docker-compose run --rm deploy cloud-post-deploy
     ```
-4. Configure and connect Varnish.
+3. Configure and connect Varnish.
     ```docker
     docker-compose run --rm deploy magento-command config:set system/full_page_cache/caching_application 2 --lock-env
     

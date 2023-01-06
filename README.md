@@ -98,8 +98,8 @@ Magento Cloud Docker: `1.3.4`
     docker run --rm -v "$(pwd)":/m2 "magento/magento-cloud-docker-php:8.1-cli-1.3.4" composer update --working-dir=/m2
     ```
 8. In your local project root, generate the Docker Compose configuration file with mutagen used for synchronizing data in Docker.
-    ```bash
-    ./vendor/bin/ece-docker build:compose --mode="developer" --sync-engine="mutagen"
+    ```docker
+    docker run --rm -v "$(pwd)":/m2 "magento/magento-cloud-docker-php:8.1-cli-1.3.4" /m2/vendor/bin/ece-docker build:compose --mode="developer" --sync-engine="mutagen"
     ```
 9.  Copy the default configuration DIST file to your custom configuration file and make any necessary changes.
     ```bash

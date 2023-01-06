@@ -139,7 +139,8 @@ Magento Cloud Docker: `1.3.4`
 3. Configure and connect Varnish.
     ```docker
     docker-compose run --rm deploy magento-command config:set system/full_page_cache/caching_application 2 --lock-env
-    
+    ```
+    ```docker    
     docker-compose run --rm deploy magento-command setup:config:set --http-cache-hosts=varnish
     ```
     Answer `Y` to the following prompt:  
@@ -160,7 +161,8 @@ https://magento2.docker/admin
 ## (Optional) Install Sample Data
 ```docker
 docker-compose run --rm deploy magento-command sampledata:deploy
-
+```
+```
 docker-compose run --rm deploy magento-command setup:upgrade
 ```
 ----

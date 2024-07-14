@@ -1,8 +1,8 @@
 # Magento Cloud Docker - Community Edition
 
 ## Versions
-Magento: `2.4.5-p1 Community Edition`  
-Magento Cloud Docker: `1.3.4`
+Magento: `2.4.7-p1 Community Edition`  
+Magento Cloud Docker: `1.3.7`
 
 ## Prerequisities:
 - Docker
@@ -20,13 +20,13 @@ Magento Cloud Docker: `1.3.4`
     ```
 3. Build docker images.
     ```docker
-    docker image build --platform=linux/arm64/v8 -t magento/magento-cloud-docker-php:8.1-cli-1.3.4 ./images/php/8.1-cli
+    docker image build --platform=linux/arm64/v8 -t magento/magento-cloud-docker-php:8.3-cli-1.3.7 ./images/php/8.3-cli
 
-    docker image build --platform=linux/arm64/v8 -t magento/magento-cloud-docker-opensearch:1.2-1.3.4 ./images/opensearch/1.2
+    docker image build --platform=linux/arm64/v8 -t magento/magento-cloud-docker-opensearch:2.12-1.3.7 ./images/opensearch/2.12
     
-    docker image build --platform=linux/arm64/v8 -t magento/magento-cloud-docker-nginx:1.19-1.3.4 ./images/nginx/1.19
+    docker image build --platform=linux/arm64/v8 -t magento/magento-cloud-docker-nginx:1.24-1.3.7 ./images/nginx/1.24
     
-    docker image build --platform=linux/arm64/v8 -t magento/magento-cloud-docker-varnish:6.6-1.3.4 ./images/varnish/6.6
+    docker image build --platform=linux/arm64/v8 -t magento/magento-cloud-docker-varnish:7.1.1-1.3.7 ./images/varnish/7.1.1
     ```
 
 ## Install Magento Cloud Docker
@@ -37,7 +37,7 @@ Magento Cloud Docker: `1.3.4`
 3. Create composer project based on `magento/project-community-edition`.
    Replace `<public-key>:<private-key>` with your [access credentials](https://experienceleague.adobe.com/docs/commerce-operations/installation-guide/prerequisites/authentication-keys.html)
     ```docker
-    docker run --rm -v "$(pwd)":/m2 "magento/magento-cloud-docker-php:8.1-cli-1.3.4" composer create-project --repository-url=https://<public-key>:<private-key>@repo.magento.com/ magento/project-community-edition=2.4.5-p1 /m2
+    docker run --rm -v "$(pwd)":/m2 "magento/magento-cloud-docker-php:8.3-cli-1.3.7" composer create-project --repository-url=https://<public-key>:<private-key>@repo.magento.com/ magento/project-community-edition=2.4.7-p1 /m2
     ```
 4. Add your [access credentials](https://experienceleague.adobe.com/docs/commerce-operations/installation-guide/prerequisites/authentication-keys.html) to the auth.json file.
     ```json
@@ -52,7 +52,7 @@ Magento Cloud Docker: `1.3.4`
     ```
 5. Add the ece-tools and Cloud Docker for Commerce packages.
     ```docker
-    docker run --rm -v "$(pwd)":/m2 "magento/magento-cloud-docker-php:8.1-cli-1.3.4" composer require --working-dir=/m2 --no-update --dev magento/ece-tools magento/magento-cloud-docker
+    docker run --rm -v "$(pwd)":/m2 "magento/magento-cloud-docker-php:8.3-cli-1.3.7" composer require --working-dir=/m2 --no-update --dev magento/ece-tools magento/magento-cloud-docker
     ```
 6. Create the default configuration source file, .magento.docker.yml to build the Docker containers for the local environment.
     ```yml
@@ -61,20 +61,20 @@ Magento Cloud Docker: `1.3.4`
         mode: 'developer' 
     services:
         php:
-            version: '8.1'
+            version: '8.3'
             extensions:
                 enabled:
                     - xsl
                     - json
                     - redis
         mysql:
-            version: '10.4'
+            version: '10.6'
             image: 'mariadb'
         redis:
-            version: '6.0'
+            version: '7.2'
             image: 'redis'
         opensearch:
-            version: '1.2'
+            version: '2.12'
             image: 'magento/magento-cloud-docker-opensearch'
     hooks:
         build: |
@@ -95,11 +95,11 @@ Magento Cloud Docker: `1.3.4`
    ```
 7. Update project.
     ```docker
-    docker run --rm -v "$(pwd)":/m2 "magento/magento-cloud-docker-php:8.1-cli-1.3.4" composer update --working-dir=/m2
+    docker run --rm -v "$(pwd)":/m2 "magento/magento-cloud-docker-php:8.3-cli-1.3.7" composer update --working-dir=/m2
     ```
 8. In your local project root, generate the Docker Compose configuration file with mutagen used for synchronizing data in Docker.
     ```docker
-    docker run --rm -v "$(pwd)":/m2 "magento/magento-cloud-docker-php:8.1-cli-1.3.4" /m2/vendor/bin/ece-docker build:compose --mode="developer" --sync-engine="mutagen"
+    docker run --rm -v "$(pwd)":/m2 "magento/magento-cloud-docker-php:8.3-cli-1.3.7" /m2/vendor/bin/ece-docker build:compose --mode="developer" --sync-engine="mutagen"
     ```
 9.  Copy the default configuration DIST file to your custom configuration file and make any necessary changes.
     ```bash
@@ -107,9 +107,11 @@ Magento Cloud Docker: `1.3.4`
     ```
 10. Build files to containers and run in the background.
     ```docker
-    docker-compose up -d
+    docker compose up -d
     ```
 11. Start the file synchronisation.
+    When using docker compose instead of docker-compose ensure that contents of mutagen.sh were updated accordingly as they are still using old format of docker compose.
+
     ```bash
     bash ./mutagen.sh
     ```
@@ -124,32 +126,22 @@ Magento Cloud Docker: `1.3.4`
 ### Install Magento Cloud Docker
 1. Deploy Adobe Commerce in the Docker container.
     ```docker
-    docker-compose run --rm deploy cloud-deploy
+    docker compose run --rm deploy cloud-deploy
     ```
-    If you come across an error during a deployment e.g. `Fatal error: Uncaught Exception: User Error:...` then you will need to run:
-    ```docker
-    docker-compose run deploy bin/magento setup:upgrade
-    ```
-    And then re-run the original `cloud-deploy` command.
-    This is due to this [issue](https://github.com/magento/magento-cloud-docker/issues/302) in Magento Cloud Docker.
 2. Run post-deploy hooks.
     ```docker
-    docker-compose run --rm deploy cloud-post-deploy
+    docker compose run --rm deploy cloud-post-deploy
     ```
 3. Configure and connect Varnish.
     ```docker
-    docker-compose run --rm deploy magento-command config:set system/full_page_cache/caching_application 2 --lock-env
+    docker compose run --rm deploy magento-command config:set system/full_page_cache/caching_application 2 --lock-env
     ```
     ```docker    
-    docker-compose run --rm deploy magento-command setup:config:set --http-cache-hosts=varnish
-    ```
-    Answer `Y` to the following prompt:  
-    ```
-    Overwrite the existing configuration for http-cache-hosts?[Y/n]
+    docker compose run --rm deploy magento-command setup:config:set --http-cache-hosts=varnish --no-interaction
     ```
 4. Clear the cache.
     ```docker
-    docker-compose run --rm deploy magento-command cache:clean
+    docker compose run --rm deploy magento-command cache:clean
     ```
 
 Access the local storefront by opening the following URL in a browser:  
@@ -160,10 +152,10 @@ https://magento2.docker/admin
 
 ## (Optional) Install Sample Data
 ```docker
-docker-compose run --rm deploy magento-command sampledata:deploy
+docker compose run --rm deploy magento-command sampledata:deploy
 ```
 ```
-docker-compose run --rm deploy magento-command setup:upgrade
+docker compose run --rm deploy magento-command setup:upgrade
 ```
 ----
 Based on https://developer.adobe.com/commerce/cloud-tools/docker/deploy/developer-mode/

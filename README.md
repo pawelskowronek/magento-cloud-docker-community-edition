@@ -163,8 +163,49 @@ https://magento2.docker/admin
 ```docker
 docker compose run --rm deploy magento-command sampledata:deploy
 ```
-```
+
+```docker
 docker compose run --rm deploy magento-command setup:upgrade
 ```
-----
-Based on https://developer.adobe.com/commerce/cloud-tools/docker/deploy/developer-mode/
+
+## (Optional) Install Hyva Theme
+
+Now that Hyva Theme is officially open-sourced you can easily install it.
+
+### Create account and get credentials
+
+Get a free key by registering an account at hyva.io and creating one from your account dashboard.
+
+### Add credentials to your project
+
+```docker
+docker compose run --rm deploy composer config repositories.private-packagist composer https://hyva-themes.repo.packagist.com/magento2-docke-XXXXX/
+docker compose run --rm deploy composer config --global --auth http-basic.hyva-themes.repo.packagist.com token XXXXX
+```
+
+### Install Hyva Theme with Luma Checkout
+
+Unfortunately Hyva Checkout is still a paid-for add-on so if you want to have a functional checkout you will need to install Luma Checkout fallback.
+
+```docker
+docker compose run --rm deploy composer require hyva-themes/magento2-default-theme hyva-themes/magento2-luma-checkout
+docker compose run --rm deploy magento-command mo:di Magento_TwoFactorAuth Magento_AdminAdobeImsTwoFactorAuth
+docker compose run --rm deploy magento-command setup:upgrade
+```
+
+### Enable Hyva Theme in Magento Dashboard
+
+Navigate to the Content > Design > Configuration admin section and activate the hyva/default theme on a Website level.
+
+### Clear caches
+
+```docker
+docker compose run --rm deploy magento-command cache:clean
+docker compose run --rm deploy magento-command cache:flush
+```
+
+---
+
+Based on:
+https://developer.adobe.com/commerce/cloud-tools/docker/deploy/developer-mode/
+https://docs.hyva.io/hyva-themes/getting-started/index.html#getting-started
